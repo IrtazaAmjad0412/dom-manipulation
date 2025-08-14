@@ -38,3 +38,53 @@
  */
 
 // Your code goes here...
+const container = document.querySelector(".cardsContainer");
+
+const getFavorites = () => {
+  return JSON.parse(localStorage.getItem("favorites")) || [];
+};
+
+const setFavorites = (data) => {
+  localStorage.setItem("favorites", JSON.stringify(data));
+};
+
+const addFavorite = (id) => {
+  const data = getFavorites();
+  if (!data.includes(id)) {
+    data.push(id);
+    setFavorites(data);
+  }
+};
+
+const removeFavorite = (id) => {
+  const updatedData = getFavorites().filter((favID) => favID !== id);
+  setFavorites(updatedData);
+};
+
+const loadFavorites = () => {
+  const data = getFavorites();
+  data.forEach((id) => {
+    const item = document.getElementById(id);
+    if (item) {
+      item.style.backgroundColor = "red";
+    }
+  });
+};
+
+loadFavorites();
+
+container.addEventListener("click", (e) => {
+  const item = e.target;
+
+  if (!item.id) {
+    return;
+  }
+
+  if (getFavorites().includes(item.id)) {
+    item.style.backgroundColor = "white";
+    removeFavorite(item.id);
+  } else {
+    item.style.backgroundColor = "red";
+    addFavorite(item.id);
+  }
+});
